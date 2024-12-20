@@ -1,0 +1,35 @@
+//@version=6
+indicator("EMA 20, EMA 200 with Persistent Dynamic Colors", overlay=true)
+
+// Input settings for EMAs
+ema20Length = input.int(20, title="EMA 20 Length")
+ema200Length = input.int(200, title="EMA 200 Length")
+
+// Calculate EMAs
+ema20 = ta.ema(close, ema20Length)
+ema200 = ta.ema(close, ema200Length)
+
+// Detect crossovers with price crossing up or down the EMAs
+priceCrossUpEma20 = ta.crossover(close, ema20)  // Price crosses up above EMA 20
+priceCrossDownEma20 = ta.crossunder(close, ema20)  // Price crosses down below EMA 20
+priceCrossUpEma200 = ta.crossover(close, ema200)  // Price crosses up above EMA 200
+priceCrossDownEma200 = ta.crossunder(close, ema200)  // Price crosses down below EMA 200
+
+// Persistent variables for EMA colors
+var ema20Color = color.yellow
+var ema200Color = color.gray
+
+// Update EMA colors based on price crossovers
+if priceCrossUpEma20
+    ema20Color := color.green  // Price crosses up above EMA 20
+else if priceCrossDownEma20
+    ema20Color := color.red   // Price crosses down below EMA 20
+
+if priceCrossUpEma200
+    ema200Color := color.green  // Price crosses up above EMA 200
+else if priceCrossDownEma200
+    ema200Color := color.red   // Price crosses down below EMA 200
+
+// Plot EMAs with persistent colors
+plot(ema20, title="EMA 20", color=ema20Color, linewidth=2)
+plot(ema200, title="EMA 200", color=ema200Color, linewidth=2)
